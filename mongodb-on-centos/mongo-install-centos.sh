@@ -60,11 +60,10 @@ sleep 10
 echo "\nGetting UUID info...\n"
 blkid -u filesystem /dev/sdc1 > ~/blkinfo.txt
 cat ~/blkinfo.txt | awk -F "[= ]" '{print $3}'|tr -d "\"" > ~/UUID.txt
-cat UUID.txt | sed "s/.\{0\}/UUID=/" | sed "s/$/\t\/data\txfs\tnoatime,nodiratime,nodev,noexec,nosuid\t1 2/" > ~/newUUID.txt
+cat ~/UUID.txt | sed "s/.\{0\}/UUID=/" | sed "s/$/\t\/data\txfs\tnoatime,nodiratime,nodev,noexec,nosuid\t1 2/" > ~/newUUID.txt
 echo "\nWriting fstab info...\n"
 cat ~/newUUID.txt >> /etc/fstab
 
-sleep 3
 #mod mongo conf to use /data for data
 echo "\nmodding mongodb conf...\n"
 sed -i 's/dbPath: \/var\/lib\/mongo/dbPath: \/data/g' /etc/mongod.conf
