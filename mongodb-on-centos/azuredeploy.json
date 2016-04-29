@@ -185,7 +185,7 @@
           "osDisk": {
             "name": "osdisk1",
             "vhd": {
-              "uri": "[concat('http://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/','osdisk1spec.vhd')]"
+              "uri": "[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/','osdisk1spec.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -196,12 +196,12 @@
 				"diskSizeGB":"20",
 				"lun":0,
 				"vhd":{
-					"Uri":"[[concat('http://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'vm',parameters('vmName'),'dataDisk0.vhd')]"
+					"uri":"[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'vm',parameters('vmName'),'dataDisk0.vhd')]"
 				},
 				"caching":"ReadWrite",
 				"createOption":"Empty"
 			}
-		  ],
+		  ]
         },
         "networkProfile": {
           "networkInterfaces": [
