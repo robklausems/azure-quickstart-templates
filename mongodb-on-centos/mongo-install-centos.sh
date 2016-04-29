@@ -46,26 +46,15 @@ semanage port -a -t mongod_port_t -p tcp 27017
 #listen on all ports
 sed -i 's/bindIp/#bindIp/g' /etc/mongod.conf
 
-
 #format & mount the data storage disk
-add_to_fstab() {
-    UUID=${1}
-    MOUNTPOINT=${2}
-    grep "${UUID}" /etc/fstab >/dev/null 2>&1
-    if [ ${?} -eq 0 ];
-    then
-        echo "Not adding ${UUID} to fstab again (it's already there!)"
-    else
-        LINE="UUID=\"${UUID}\"\t${MOUNTPOINT}\txfs\tnoatime,nodiratime,nodev,noexec,nosuid\t1 2"
-        echo -e "${LINE}" >> /etc/fstab
-    fi
-}
 echo -e "n\np\n1\n\n\nw" | fdisk /dev/sdc
 mkfs -t xfs /dev/sdc1
 mkdir /data
 mount /dev/sdc1 /data
+chown mongod:mongod /data
 read UUID FS_TYPE < <(blkid -u filesystem /dev/sdc1|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
-add_to_fstab "${UUID}" "${MOUNTPOINT}"
+LINE="UUID=\"${UUID}\"\t${MOUNTPOINT}\txfs\tnoatime,nodiratime,nodev,noexec,nosuid\t1 2"
+echo -e "${LINE}" >> /etc/fstab
 
 #mod mongo conf to use /data for data
 sed -i 's/dbPath: \/var\/lib\/mongo/dbPath: \/data/g' /etc/mongod.conf
