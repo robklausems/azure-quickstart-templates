@@ -21,6 +21,25 @@ yum install -y xfsprogs mongodb-enterprise policycoreutils-python
 #enable access fo relevant ports for SELINUX
 semanage port -a -t mongod_port_t -p tcp 27017
 
+# Disable THP on a running system
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+
+# Disable THP upon reboot
+cp -p /etc/rc.d/rc.local /etc/rc.d/rc.local.`date +%Y%m%d-%H:%M`
+sed -i -e '$i \ if test -f /sys/kernel/mm/transparent_hugepage/enabled; then \
+		 echo never > /sys/kernel/mm/transparent_hugepage/enabled \
+	  fi \ \
+	if test -f /sys/kernel/mm/transparent_hugepage/defrag; then \
+	   echo never > /sys/kernel/mm/transparent_hugepage/defrag \
+	fi \
+	\n' /etc/rc.d/rc.local
+chmod +x /etc/rc.d/rc.local
+
+#set soft rlimits
+cp /etc/security/limits.d/90-nproc.conf /etc/security/limits.d/99-mongodb-nproc.conf
+sed -i 's/1024/32000/g' /etc/security/limits.d/99-mongodb-nproc.conf
+
 #start mongodb
 service mongod start
 
