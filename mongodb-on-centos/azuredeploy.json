@@ -30,16 +30,16 @@
     },
     "imageSKU": {
       "type": "string",
-      "defaultValue": "7.0",
+      "defaultValue": "6.7",
       "metadata": {
         "description": "Image SKU"
       }
     },
     "location": {
       "type": "string",
-      "defaultValue": "West US",
+      "defaultValue": "East US 2",
       "allowedValues": [
-        "East US",
+        "East US 2",
         "West US",
         "West Europe",
         "East Asia",
@@ -214,7 +214,7 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/mongodb-on-centos/mongo-install-centos.sh"
+            "https://raw.githubusercontent.com/robklausems`/azure-quickstart-templates/master/mongodb-on-centos/mongo-install-centos.sh"
           ],
           "commandToExecute": "sh mongo-install-centos.sh"
         }
