@@ -8,12 +8,21 @@
 touch /etc/yum.repos.d/mongodb-enterprise.repo 
 echo "[mongodb-org-3.0]" >> /etc/yum.repos.d/mongodb-enterprise.repo 
 echo "name=MongoDB Repository" >> /etc/yum.repos.d/mongodb-enterprise.repo 
-echo "baseurl=https://repo.mongodb.com/yum/redhat/$releasever/mongodb-enterprise/stable/$basearch/" >> /etc/yum.repos.d/mongodb-enterprise.repo
+echo "baseurl=https://repo.mongodb.com/yum/redhat/\$releasever/mongodb-enterprise/stable/\$basearch/" >> /etc/yum.repos.d/mongodb-enterprise.repo
 echo "gpgcheck=1" >> /etc/yum.repos.d/mongodb-enterprise.repo
 echo "enabled=1" >> /etc/yum.repos.d/mongodb-enterprise.repo
 echo "gpgkey=https://www.mongodb.org/static/pgp/server-3.2.asc" >>  /etc/yum.repos.d/mongodb-enterprise.repo
 # Install updates
 yum -y update
 
-#Install Mongo DB & xfs driver
-yum install -y xfsprogs mongodb-org
+#Install Mongo DB, xfs driver, & SELINUX management tools
+yum install -y xfsprogs mongodb-enterprise policycoreutils-python
+
+#enable access fo relevant ports for SELINUX
+semanage port -a -t mongod_port_t -p tcp 27017
+
+#start mongodb
+service mongod start
+
+#set mongo to start on reboot
+chkconfig mongod on
