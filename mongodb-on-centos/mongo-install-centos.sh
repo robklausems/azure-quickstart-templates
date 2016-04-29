@@ -6,20 +6,14 @@
 
 #sudo chmod 777 /etc/yum.repos.d/mongodb.repo
 touch /etc/yum.repos.d/mongodb-enterprise.repo 
-echo "[mongodb-org-3.0]" >> /etc/yum.repos.d/mongodb-enterprise.repo 
-echo "name=MongoDB Repository" >> /etc/yum.repos.d/mongodb-enterprise.repo 
+echo "[mongodb-enterprise]" >> /etc/yum.repos.d/mongodb-enterprise.repo 
+echo "name=MongoDB Enterprise Repository" >> /etc/yum.repos.d/mongodb-enterprise.repo 
 echo "baseurl=https://repo.mongodb.com/yum/redhat/\$releasever/mongodb-enterprise/stable/\$basearch/" >> /etc/yum.repos.d/mongodb-enterprise.repo
 echo "gpgcheck=1" >> /etc/yum.repos.d/mongodb-enterprise.repo
 echo "enabled=1" >> /etc/yum.repos.d/mongodb-enterprise.repo
 echo "gpgkey=https://www.mongodb.org/static/pgp/server-3.2.asc" >>  /etc/yum.repos.d/mongodb-enterprise.repo
 # Install updates
 yum -y update
-
-#Install Mongo DB, xfs driver, & SELINUX management tools
-yum install -y xfsprogs mongodb-enterprise policycoreutils-python
-
-#enable access fo relevant ports for SELINUX
-semanage port -a -t mongod_port_t -p tcp 27017
 
 # Disable THP on a running system
 echo never > /sys/kernel/mm/transparent_hugepage/enabled
@@ -37,8 +31,20 @@ sed -i -e '$i \ if test -f /sys/kernel/mm/transparent_hugepage/enabled; then \
 chmod +x /etc/rc.d/rc.local
 
 #set soft rlimits
+ulimit -u 32000
+
+#set soft rlimits when sytem reboots
 cp /etc/security/limits.d/90-nproc.conf /etc/security/limits.d/99-mongodb-nproc.conf
 sed -i 's/1024/32000/g' /etc/security/limits.d/99-mongodb-nproc.conf
+
+#Install Mongo DB, xfs driver, & SELINUX management tools
+yum install -y xfsprogs mongodb-enterprise policycoreutils-python
+
+#enable access fo relevant ports for SELINUX
+semanage port -a -t mongod_port_t -p tcp 27017
+
+#listen on all ports
+sed -i 's/bindIp/#bindIp/g' /etc/mongod.conf
 
 #start mongodb
 service mongod start
