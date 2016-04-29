@@ -47,18 +47,28 @@ semanage port -a -t mongod_port_t -p tcp 27017
 sed -i 's/bindIp/#bindIp/g' /etc/mongod.conf
 
 #format & mount the data storage disk
+echo "\nPartitioning data drive...\n"
 echo -e "n\np\n1\n\n\nw" | fdisk /dev/sdc
+sleep 3
+echo "\nFormatting /dev/sdc1\n"
 mkfs -t xfs /dev/sdc1
+sleep 10
 mkdir /data
 mount /dev/sdc1 /data
 chown mongod:mongod /data
+sleep 10
+echo "\nGetting UUID info...\n"
 read UUID FS_TYPE < <(blkid -u filesystem /dev/sdc1|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
 LINE="UUID=\"${UUID}\"\t/data\txfs\tnoatime,nodiratime,nodev,noexec,nosuid\t1 2"
+echo "\nWriting fstab info...\n"
 echo -e "${LINE}" >> /etc/fstab
 
+sleep 3
 #mod mongo conf to use /data for data
+echo "\nmodding mongodb conf...\n"
 sed -i 's/dbPath: \/var\/lib\/mongo/dbPath: \/data/g' /etc/mongod.conf
-
+sleep 2
+echo "\nstarting mongod...\n"
 #start mongodb
 service mongod start
 
