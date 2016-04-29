@@ -13,7 +13,7 @@ echo "gpgcheck=1" >> /etc/yum.repos.d/mongodb-enterprise.repo
 echo "enabled=1" >> /etc/yum.repos.d/mongodb-enterprise.repo
 echo "gpgkey=https://www.mongodb.org/static/pgp/server-3.2.asc" >>  /etc/yum.repos.d/mongodb-enterprise.repo
 # Install updates
-yum -y update
+#yum -y update
 
 # Disable THP on a running system
 echo never > /sys/kernel/mm/transparent_hugepage/enabled
@@ -53,7 +53,7 @@ mkdir /data
 mount /dev/sdc1 /data
 chown mongod:mongod /data
 read UUID FS_TYPE < <(blkid -u filesystem /dev/sdc1|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
-LINE="UUID=\"${UUID}\"\t${MOUNTPOINT}\txfs\tnoatime,nodiratime,nodev,noexec,nosuid\t1 2"
+LINE="UUID=\"${UUID}\"\t/data\txfs\tnoatime,nodiratime,nodev,noexec,nosuid\t1 2"
 echo -e "${LINE}" >> /etc/fstab
 
 #mod mongo conf to use /data for data
