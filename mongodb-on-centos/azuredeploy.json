@@ -196,7 +196,7 @@
 				"diskSizeGB":"20",
 				"lun":0,
 				"vhd":{
-					"uri":"[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('vmName'),'/','dataDisk0.vhd')]"
+					"uri":"[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/','datadisk-0.vhd')]"
 				},
 				"caching":"ReadWrite",
 				"createOption":"Empty"
