@@ -37,24 +37,24 @@ ulimit -u 32000
 cp /etc/security/limits.d/90-nproc.conf /etc/security/limits.d/99-mongodb-nproc.conf
 sed -i 's/1024/32000/g' /etc/security/limits.d/99-mongodb-nproc.conf
 
-#Install Mongo DB, xfs driver, & SELINUX management tools
-yum install -y xfsprogs mongodb-enterprise policycoreutils-python
-
 #enable access fo relevant ports for SELINUX
 semanage port -a -t mongod_port_t -p tcp 27017
-
-#listen on all ports
-sed -i 's/bindIp/#bindIp/g' /etc/mongod.conf
 
 #format & mount the data storage disk
 echo -e "n\np\n1\n\n\nw" | fdisk /dev/sdc
 mkfs -t xfs /dev/sdc1
 mkdir /data
 mount /dev/sdc1 /data
-chown mongod:mongod /data
 read UUID FS_TYPE < <(blkid -u filesystem /dev/sdc1|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
 LINE="UUID=\"${UUID}\"\t/data\txfs\tnoatime,nodiratime,nodev,noexec,nosuid\t1 2"
 echo -e "${LINE}" >> /etc/fstab
+
+#Install Mongo DB, xfs driver, & SELINUX management tools
+yum install -y xfsprogs mongodb-enterprise policycoreutils-python
+chown mongod:mongod /data
+
+#listen on all ports
+sed -i 's/bindIp/#bindIp/g' /etc/mongod.conf
 
 #mod mongo conf to use /data for data
 sed -i 's/dbPath: \/var\/lib\/mongo/dbPath: \/data/g' /etc/mongod.conf
