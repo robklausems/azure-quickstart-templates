@@ -39,6 +39,7 @@
       "type": "string",
       "defaultValue": "East US 2",
       "allowedValues": [
+        "East US",
         "East US 2",
         "West US",
         "West Europe",
