@@ -17,4 +17,3 @@ yum -y update
 
 #Install Mongo DB & xfs driver
 yum install -y xfsprogs mongodb-org
-
