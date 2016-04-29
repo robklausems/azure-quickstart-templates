@@ -51,7 +51,7 @@
     },
     "vmSize": {
       "type": "string",
-      "defaultValue": "Standard_A0"
+      "defaultValue": "Standard_D3"
     },
     "publicIPAddressName": {
       "type": "string",
@@ -59,15 +59,15 @@
     },
     "vmName": {
       "type": "string",
-      "defaultValue": "myLinuxVM"
+      "defaultValue": "mongodbVM"
     },
     "virtualNetworkName": {
       "type": "string",
-      "defaultValue": "myVNET"
+      "defaultValue": "mongodbVNET"
     },
     "nicName": {
       "type": "string",
-      "defaultValue": "myNIC"
+      "defaultValue": "mongodbNIC"
     }
   },
   "variables": {
@@ -196,7 +196,7 @@
 				"diskSizeGB":"20",
 				"lun":0,
 				"vhd":{
-					"uri":"[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'vm',parameters('vmName'),'dataDisk0.vhd')]"
+					"uri":"[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/vm/',parameters('vmName'),'/','dataDisk0.vhd')]"
 				},
 				"caching":"ReadWrite",
 				"createOption":"Empty"
