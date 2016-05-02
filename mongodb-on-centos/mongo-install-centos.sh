@@ -38,7 +38,7 @@ cp /etc/security/limits.d/90-nproc.conf /etc/security/limits.d/99-mongodb-nproc.
 sed -i 's/1024/32000/g' /etc/security/limits.d/99-mongodb-nproc.conf
 
 #Install Mongo DB, xfs driver, & SELINUX management tools
-yum install -y xfsprogs mongodb-enterprise policycoreutils-python
+yum install -y xfsprogs mdadm mongodb-enterprise policycoreutils-python
 
 #enable access fo relevant ports for SELINUX
 semanage port -a -t mongod_port_t -p tcp 27017
