@@ -34,9 +34,9 @@ yum install -y xfsprogs mdadm policycoreutils-python microsoft-hyper-v
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config 
 
 #set readahead
-/sbin/blockdev --setra 16384 /dev/sda
-/sbin/blockdev --setra 16384 /dev/sdb
-/sbin/blockdev --setra 16384 /dev/sdc
+echo "/sbin/blockdev --setra 16384 /dev/sda" >> /etc/rc.d/rc.local
+echo "/sbin/blockdev --setra 16384 /dev/sdb" >> /etc/rc.d/rc.local
+echo "/sbin/blockdev --setra 16384 /dev/sdc" >> /etc/rc.d/rc.local
 
 #enable root login for ssh. yeah, I know....
 sed -i 's/#PermitRootLogin/PermitRootLogin/g' /etc/ssh/sshd_config
