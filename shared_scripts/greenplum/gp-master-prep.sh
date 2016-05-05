@@ -77,5 +77,3 @@ echo "vm.overcommit_memory = 2" >> /etc/sysctl.conf
 #cat ~/UUID.txt | sed "s/.\{0\}/UUID=/" | sed "s/$/\t\/data\txfs\trw,noatime,inode64,allocsize=16m \t0 0/" > ~/newUUID.txt
 #echo "\nWriting fstab info...\n"
 #cat ~/newUUID.txt >> /etc/fstab
-
-reboot
