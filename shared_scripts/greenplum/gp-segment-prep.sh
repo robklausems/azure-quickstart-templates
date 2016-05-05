@@ -38,6 +38,9 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 /sbin/blockdev --setra 16384 /dev/sdb
 /sbin/blockdev --setra 16384 /dev/sdc
 /sbin/blockdev --setra 16384 /dev/sdd
+/sbin/blockdev --setra 16384 /dev/sde
+/sbin/blockdev --setra 16384 /dev/sdf
+/sbin/blockdev --setra 16384 /dev/sdg
 
 #enable root login for ssh. yeah, I know....
 sed -i 's/#PermitRootLogin/PermitRootLogin/g' /etc/ssh/sshd_config
@@ -69,7 +72,10 @@ echo "vm.overcommit_memory = 2" >> /etc/sysctl.conf
 echo "\nPartitioning data drive...\n"
 echo -e "n\np\n1\n\n\nt\nfd\nw" | fdisk -c /dev/sdc
 echo -e "n\np\n1\n\n\nt\nfd\nw" | fdisk -c /dev/sdd
-mdadm --create /dev/md127 --level 0 --raid-devices 2 /dev/sdc1 /dev/sdd1
+echo -e "n\np\n1\n\n\nt\nfd\nw" | fdisk -c /dev/sde
+echo -e "n\np\n1\n\n\nt\nfd\nw" | fdisk -c /dev/sdf
+echo -e "n\np\n1\n\n\nt\nfd\nw" | fdisk -c /dev/sdg
+mdadm --create /dev/md127 --level 0 --raid-devices 2 /dev/sdc1 /dev/sdd1 /dev/sde1 /dev/sdf1 /dev/sdg1
 #echo "\nFormatting /dev/md12\n"
 mkfs -t xfs /dev/md127
 mkdir /data

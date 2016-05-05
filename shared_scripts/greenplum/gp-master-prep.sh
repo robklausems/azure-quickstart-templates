@@ -36,6 +36,7 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 #set readahead
 /sbin/blockdev --setra 16384 /dev/sda
 /sbin/blockdev --setra 16384 /dev/sdb
+/sbin/blockdev --setra 16384 /dev/sdc
 
 #enable root login for ssh. yeah, I know....
 sed -i 's/#PermitRootLogin/PermitRootLogin/g' /etc/ssh/sshd_config
@@ -64,19 +65,19 @@ echo "vm.overcommit_memory = 2" >> /etc/sysctl.conf
 #semanage port -a -t greenplum_port_t -p tcp 99999
 
 #format & mount the data storage disk
-#echo "\nPartitioning data drive...\n"
-#echo -e "n\np\n1\n\n\nw" | fdisk -c /dev/sdc
-#echo "\nFormatting /dev/sdc1\n"
-#mkfs -t xfs /dev/sdc1
-#mkdir /data
-#mount /dev/sdc1 /data
+echo "\nPartitioning data drive...\n"
+echo -e "n\np\n1\n\n\nw" | fdisk -c /dev/sdc
+echo "\nFormatting /dev/sdc1\n"
+mkfs -t xfs /dev/sdc1
+mkdir /data
+mount /dev/sdc1 /data
 #chown gpadmin:gpadmin /data
-#echo "\nGetting UUID info...\n"
-#blkid -u filesystem /dev/sdc1 > ~/blkinfo.txt
-#cat ~/blkinfo.txt | awk -F "[= ]" '{print $3}'|tr -d "\"" > ~/UUID.txt
-#cat ~/UUID.txt | sed "s/.\{0\}/UUID=/" | sed "s/$/\t\/data\txfs\trw,noatime,inode64,allocsize=16m \t0 0/" > ~/newUUID.txt
-#echo "\nWriting fstab info...\n"
-#cat ~/newUUID.txt >> /etc/fstab
+echo "\nGetting UUID info...\n"
+blkid -u filesystem /dev/sdc1 > ~/blkinfo.txt
+cat ~/blkinfo.txt | awk -F "[= ]" '{print $3}'|tr -d "\"" > ~/UUID.txt
+cat ~/UUID.txt | sed "s/.\{0\}/UUID=/" | sed "s/$/\t\/data\txfs\trw,noatime,inode64,allocsize=16m \t0 0/" > ~/newUUID.txt
+echo "\nWriting fstab info...\n"
+cat ~/newUUID.txt >> /etc/fstab
 #janky delayed restart mechanism... reboots in 20s
 #call it and keep going in order to get to exit 0
 echo "sleep 20 ; shutdown -r now" > ~/delayed-reboot.sh
