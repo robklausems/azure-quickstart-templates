@@ -77,6 +77,10 @@ echo "vm.overcommit_memory = 2" >> /etc/sysctl.conf
 #cat ~/UUID.txt | sed "s/.\{0\}/UUID=/" | sed "s/$/\t\/data\txfs\trw,noatime,inode64,allocsize=16m \t0 0/" > ~/newUUID.txt
 #echo "\nWriting fstab info...\n"
 #cat ~/newUUID.txt >> /etc/fstab
-
+#janky delayed restart mechanism... reboots in 20s
+#call it and keep going in order to get to exit 0
+echo "sleep 20 ; shutdown -r now" > ~/delayed-reboot.sh
+chmod +x ~/delayed-reboot.sh
+~/delayed-reboot.sh &
 #done
 exit 0
