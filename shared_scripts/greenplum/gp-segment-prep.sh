@@ -79,3 +79,6 @@ cat ~/blkinfo.txt | awk -F "[= ]" '{print $3}'|tr -d "\"" > ~/UUID.txt
 cat ~/UUID.txt | sed "s/.\{0\}/UUID=/" | sed "s/$/\t\/data\txfs\trw,noatime,inode64,allocsize=16m \t0 0/" > ~/newUUID.txt
 echo "\nWriting fstab info...\n"
 cat ~/newUUID.txt >> /etc/fstab
+
+#done
+exit 0
