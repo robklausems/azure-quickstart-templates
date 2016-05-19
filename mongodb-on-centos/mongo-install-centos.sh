@@ -46,6 +46,9 @@ semanage port -a -t mongod_port_t -p tcp 27017
 #listen on all ports
 sed -i 's/bindIp/#bindIp/g' /etc/mongod.conf
 
+#set wiredTiger engine options: use snappy compression.
+sed -i 's/#  wiredTiger:/  wiredTiger:\n    engineConfig:\n      journalCompressor: snappy\n    collectionConfig:\n      blockCompressor: snappy/g' /etc/mongod.conf
+
 #format & mount the data storage disk
 echo "\nPartitioning data drive...\n"
 echo -e "n\np\n1\n\n\nw" | fdisk /dev/sdc
